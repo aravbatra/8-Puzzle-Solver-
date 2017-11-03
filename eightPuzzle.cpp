@@ -116,7 +116,6 @@ bool puzzle::isValid(path* x){
 		}
 	}
 	return true;
-
 }
 // makes sure the user inputs 1, 2, or 3 to select algorithm
 // also returns if root is NULL or the user input puzzle is not valid
@@ -137,6 +136,35 @@ void puzzle::algorithmSelector(int x){
 		 throw std::invalid_argument( "Invalid Response" );
 	}
 
+}
+
+bool puzzle::isGoalState(vector< vector<char> > puzzle){
+	vector< vector<char> > solvedPuzzle;
+	vector<char> row1, row2, row3;
+	row1.push_back('1');
+	row1.push_back('2');
+	row1.push_back('3');
+
+	row2.push_back('4');
+	row2.push_back('5');
+	row2.push_back('6');
+
+	row3.push_back('7');
+	row3.push_back('8');
+	row3.push_back('0');
+	solvedPuzzle.push_back(row1);
+	solvedPuzzle.push_back(row2);
+	solvedPuzzle.push_back(row3);
+	// tempPuzzle filled with complete 2D vector
+
+	if(puzzle == solvedPuzzle)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 int puzzle::childrenCalculator(path *x){
@@ -174,7 +202,14 @@ int puzzle::childrenCalculator(path *x){
 	return nOfChildren;
 }
 
-void puzzle::uniformCostSearch(path* x){}
+void puzzle::uniformCostSearch(path* x){
+	if(isGoalState(x->puzzle)){
+		cout << "LITTY BOIZ" << endl;
+	}
+	else{
+		cout << "Fuck" << endl;
+	}
+}
 void puzzle::misplacedTileSearch(path* x){}
 void puzzle::manhattanDistanceSearch(path* x){}
 

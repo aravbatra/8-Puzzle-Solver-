@@ -60,7 +60,7 @@ public:
       void algorithmSelector(int x);
       void displayPuzzle();
       bool isValid(path* x);
-
+      bool isGoalState(vector< vector<char> > puzzle);
 
       void uniformCostSearch(path* x);
       void misplacedTileSearch(path* x);
