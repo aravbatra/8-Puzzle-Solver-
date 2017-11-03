@@ -16,14 +16,14 @@ int main()
     cout << "Type \"1\" to use a default puzzle, or \"2\" to enter your own puzzle" << endl;
     cin >> puzzleChoice;
 	p.generatePuzzle(puzzleChoice);
-	
+
 	int algorithmChoice = 0;
 	cout << "Enter your choice of algorithm" << endl;
 	cout << "\t1) Uniform Cost Search" << endl;
 	cout << "\t2) A* with Misplaced Tile Heuristic" << endl ;
 	cout << "\t3) A* with Manhattan Distance Heuristic" << endl;
 	cin >> algorithmChoice;
-	p.algorithmSelect(algorithmChoice);
+	p.algorithmSelector(algorithmChoice);
 
     return 0;
 }

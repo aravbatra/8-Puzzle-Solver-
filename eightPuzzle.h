@@ -47,13 +47,21 @@ private:
 
   //stores path to goal state
   list<path*> solutionPath;
+
+  int charToInt(char c);
+  vector<string> moves; 
+  int childrenCalculator(path* x);
+
+
+
 public:
       puzzle();
       void generatePuzzle(int x);
-      void algorithmSelect(int x);
+      void algorithmSelector(int x);
       void displayPuzzle();
       bool isValid(path* x);
-      int charToInt(char c);
+
+
 
       void uniformCostSearch(path* x);
       void misplacedTileSearch(path* x);

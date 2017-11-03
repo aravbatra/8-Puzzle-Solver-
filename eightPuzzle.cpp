@@ -43,7 +43,7 @@ void puzzle::generatePuzzle(int x){
 
 		row3.push_back('7');
 		row3.push_back('6');
-		row3.push_back('9');
+		row3.push_back('8');
 
 		p->puzzle.push_back(row1);
 		p->puzzle.push_back(row2);
@@ -119,7 +119,56 @@ bool puzzle::isValid(path* x){
 }
 // makes sure the user inputs 1, 2, or 3 to select algorithm
 // also returns if root is NULL or the user input puzzle is not valid
-void puzzle::algorithmSelect(int x)
-{
+void puzzle::algorithmSelector(int x){
+	if(rootNode == null)
+		 throw std::invalid_argument( "Failed to initalize puzzle" );
+	cout << "Expanding state" << endl;
+	if(x == 1){
+		uniformCostSearch(rootNode);
+	}
+	else if(x == 2){
+		misplacedTileSearch(rootNode);
+	}
+	else if(x == 3){
+		manhattanDistanceSearch(rootNode);
+	}
+	else{
+		 throw std::invalid_argument( "Invalid Response" );
+	}
+
+}
+
+int puzzle::childrenCalculator(path *x){
+	int nOfChildren = 4;
+	for(int i =0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(charToInt(x->puzzle.at(i).at(j)) == 0){
+				if(i == 0){
+					nOfChildren--;
+					moves.push_back("Left");
+					moves.push_back("Right");
+					moves.push_back("Down");
+				}
+				else if(i == 2){
+					nOfChildren--;
+					moves.push_back("Left");
+					moves.push_back("Right");
+					moves.push_back("Up");
+				}
+				else if(j == 0){
+					nOfChildren--;
+					moves.push_back("Right");
+					moves.push_back("Up");
+					moves.push_back("Down");
+				}
+				else if(j == 2){
+					nOfChildren--;
+					moves.push_back("Left");
+					moves.push_back("Up");
+					moves.push_back("Down");
+				}
+			}
+		}
+	}
 
 }
