@@ -65,6 +65,7 @@ void puzzle::generatePuzzle(int x){
 
 	}
 	else if(x == 2){
+
 		cout << "Enter your puzzle, use a zero to represent the blank" << endl;
 		char val1, val2, val3;
 		vector<char> row1, row2, row3;
@@ -88,8 +89,7 @@ void puzzle::generatePuzzle(int x){
 		row3.push_back(val3);
 
 		cout << "Your puzzle is " << endl;
-		//TODO: add displayPuzzle
-		displayPuzzle(rootNode);
+
 
 		p->puzzle.push_back(row1);
 		p->puzzle.push_back(row2);
@@ -100,7 +100,11 @@ void puzzle::generatePuzzle(int x){
 			 throw std::invalid_argument( "Invalid Puzzle" );
 		}
 		prevStates.push_back(rootNode->puzzle);
+
 		q.push(rootNode);
+
+		//TODO: add displayPuzzle
+		displayPuzzle(rootNode);
 
 	}
 	else{
