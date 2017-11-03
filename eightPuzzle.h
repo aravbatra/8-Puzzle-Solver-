@@ -30,8 +30,7 @@ struct path
 
 class path_compare {
 public:
-    bool operator()(path* p1, path* p2)
-    {
+    bool operator()(path* p1, path* p2){
        if ((p1->branchCost + p1->heuristic) > (p2->branchCost + p2->heuristic)) return true;
        return false;
     }

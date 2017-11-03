@@ -126,8 +126,7 @@ bool puzzle::isValid(path* x){
 	}
 	return true;
 }
-// makes sure the user inputs 1, 2, or 3 to select algorithm
-// also returns if root is NULL or the user input puzzle is not valid
+
 void puzzle::algorithmSelector(int x){
 	if(rootNode == NULL)
 		 throw std::invalid_argument( "Failed to initalize puzzle" );
@@ -664,7 +663,8 @@ void puzzle::assignChild(path* x, vector< vector<char> > puzzle, path* child){
 		child->head = x;
 		q.push(child);
 		totalNodes++;
-		nodesInQueue++;
+		if(q.size() > nodesInQueue)
+			nodesInQueue += 1;
 
 		goalNode = child;
 
@@ -673,13 +673,14 @@ void puzzle::assignChild(path* x, vector< vector<char> > puzzle, path* child){
 
 	if(isUnique(temp->puzzle)){
 		prevStates.push_back(temp->puzzle);
-		cout << "ENTERED assign" << endl;
+		//cout << "ENTERED assign" << endl;
 		child = temp;
 		child->head = x;
 		q.push(child);
 
 		totalNodes++;
-		nodesInQueue++;
+		if(q.size() > nodesInQueue)
+			nodesInQueue += 1;
 
 		displayPuzzle(temp);
 	}
@@ -704,22 +705,6 @@ bool puzzle::isUnique(vector< vector<char> > puzzle){
 	}
 	return true;
 }
-
-// void puzzle::displaySolution(path* x){
-// 	if(x == root){
-// 		solutionPath.push_front(x)
-// 		for (int i = 0; i < solutionPath.size(); i++) {
-// 			cou
-// 		}
-// 	}
-// 	else{
-// 		solutionPath.push_front(x)
-// 		displaySolution(x->head);
-// 	}
-//
-// }
-
-
 
 void puzzle::displayPuzzle(path* x){
 	if(x != rootNode)
