@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <queue>
 #include <list>
 using namespace std;
 
@@ -17,9 +18,25 @@ struct path
 	path* child3;
 	path* child4;
 
+  path* head;
+
+  vector<int> illegalMoves;
 	vector< vector<char> > puzzle; //store vector of puzzles here
 
+  int heuristic;
+	int branchCost;
+
 };
+
+class path_compare {
+public:
+    bool operator()(path* p1, path* p2)
+    {
+       if ((p1->branchCost + p1->heuristic) > (p2->branchCost + p2->heuristic)) return true;
+       return false;
+    }
+};
+
 
 
 class puzzle
@@ -39,18 +56,21 @@ private:
   //Keeps track of total nodes expanded
   int nodesInQueue;
 
-  //Sets true if we get to solved state
-  bool goalState;
-
   //vector of puzzles to store states to check repeats
   vector< vector< vector<char> > >prevStates;
+
+  priority_queue<path*, vector<path*>, path_compare > q;
 
   //stores path to goal state
   list<path*> solutionPath;
 
   int charToInt(char c);
-  vector<string> moves;
+
   int childrenCalculator(path* x);
+
+  path* childCreator(path* x, vector< vector<char> > puzzle);
+
+  void assignChild(path* x, vector< vector<char> > puzzle, path* child);
 
 
 
@@ -58,18 +78,19 @@ public:
       puzzle();
       void generatePuzzle(int x);
       void algorithmSelector(int x);
-      void displayPuzzle();
+      void displayPuzzle(path* x);
       bool isValid(path* x);
       bool isGoalState(vector< vector<char> > puzzle);
+      bool isUnique(vector< vector<char> > puzzle);
 
       void uniformCostSearch(path* x);
       void misplacedTileSearch(path* x);
       void manhattanDistanceSearch(path* x);
 
-      void moveLeft(path* x,int i,int j);
-      void moveRight(path* x,int i,int j);
-      void moveUp(path* x,int i,int j);
-      void moveDown(path* x,int i,int j);
+      vector< vector<char> > moveLeft(path* x,int i,int j);
+      vector< vector<char> > moveRight(path* x,int i,int j);
+      vector< vector<char> > moveUp(path* x,int i,int j);
+      vector< vector<char> > moveDown(path* x,int i,int j);
 
       };
 #endif

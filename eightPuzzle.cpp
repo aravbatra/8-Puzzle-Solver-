@@ -23,7 +23,6 @@ void puzzle::generatePuzzle(int x){
 	p->child3 = NULL;
 	p->child4 = NULL;
 
-	goalState = false;
 	totalNodes = 0;
 	nodesInQueue = 0;
 
@@ -44,19 +43,20 @@ void puzzle::generatePuzzle(int x){
 
 		row3.push_back('7');
 		row3.push_back('6');
-		row3.push_back('8');
+		row3.push_back('5');
 
 		p->puzzle.push_back(row1);
 		p->puzzle.push_back(row2);
 		p->puzzle.push_back(row3);
 
 		rootNode = p;
-		prevStates.push_back(rootNode->puzzle);
 		if(!isValid(rootNode)){
 			 throw std::invalid_argument( "Invalid Puzzle" );
 		}
+		prevStates.push_back(rootNode->puzzle);
+		q.push(rootNode);
 		//TODO: add displayPuzzle
-		//displayPuzzle(rootNode);
+		displayPuzzle(rootNode);
 
 
 	}
@@ -85,7 +85,7 @@ void puzzle::generatePuzzle(int x){
 
 		cout << "Your puzzle is " << endl;
 		//TODO: add displayPuzzle
-		//displayPuzzle(rootNode);
+		displayPuzzle(rootNode);
 
 		p->puzzle.push_back(row1);
 		p->puzzle.push_back(row2);
@@ -96,6 +96,7 @@ void puzzle::generatePuzzle(int x){
 			 throw std::invalid_argument( "Invalid Puzzle" );
 		}
 		prevStates.push_back(rootNode->puzzle);
+		q.push(rootNode);
 
 	}
 	else{
@@ -168,33 +169,42 @@ bool puzzle::isGoalState(vector< vector<char> > puzzle){
 }
 
 int puzzle::childrenCalculator(path *x){
+		//Left = 1
+		//Right = 2
+		//Up = 3
+		//Down = 4
 	int nOfChildren = 4;
 	for(int i =0; i < 3; i++){
 		for(int j = 0; j < 3; j++){
 			if(charToInt(x->puzzle.at(i).at(j)) == 0){
 				if(i == 0){
 					nOfChildren--;
-					moves.push_back("Left");
-					moves.push_back("Right");
-					moves.push_back("Down");
+					// moves.push_back("Left");
+					// moves.push_back("Right");
+					// moves.push_back("Down");
+					x->illegalMoves.push_back(3); // UP
 				}
 				else if(i == 2){
 					nOfChildren--;
-					moves.push_back("Left");
-					moves.push_back("Right");
-					moves.push_back("Up");
+					// moves.push_back("Left");
+					// moves.push_back("Right");
+					// moves.push_back("Up");
+					x->illegalMoves.push_back(4); // Down
 				}
-				else if(j == 0){
+
+				if(j == 0){
 					nOfChildren--;
-					moves.push_back("Right");
-					moves.push_back("Up");
-					moves.push_back("Down");
+					// moves.push_back("Right");
+					// moves.push_back("Up");
+					// moves.push_back("Down");
+					x->illegalMoves.push_back(1); //LEFT
 				}
 				else if(j == 2){
 					nOfChildren--;
-					moves.push_back("Left");
-					moves.push_back("Up");
-					moves.push_back("Down");
+					// moves.push_back("Left");
+					// moves.push_back("Up");
+					// moves.push_back("Down");
+					x->illegalMoves.push_back(2); //Right
 				}
 			}
 		}
@@ -203,6 +213,75 @@ int puzzle::childrenCalculator(path *x){
 }
 
 void puzzle::uniformCostSearch(path* x){
+	int horizontalIndex = 0;
+	int verticalIndex = 0;
+
+	vector< vector<char> > leftShift;
+	vector< vector<char> > rightShift;
+	vector< vector<char> > downShift;
+	vector< vector<char> > upShift;
+
+	if(isGoalState(x->puzzle)){
+		cout << "LITTY BOIZ" << endl;
+		return;
+	}
+	else{
+		q.pop();
+	}
+	for(int i =0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(charToInt(x->puzzle.at(i).at(j)) == 0){
+				horizontalIndex = i;
+				verticalIndex = j;
+				break;
+			}
+		}
+	}
+	int nOfChildren = childrenCalculator(x);
+	bool left = true;
+ 	bool right = true;
+	bool up = true;
+	bool down = true;
+	for(int i = 0; i < x->illegalMoves.size(); i++){
+		if(x->illegalMoves.at(i) == 1){
+			left = false;
+		}
+		else if(x->illegalMoves.at(i) == 2){
+			right = false;
+		}
+		if(x->illegalMoves.at(i) == 3){
+			up = false;
+		}
+		else if(x->illegalMoves.at(i) == 4){
+			down = false;
+		}
+	}
+
+	if(left){
+		leftShift = moveLeft(x,horizontalIndex,verticalIndex);
+		assignChild(x, leftShift, x->child1);
+	}
+	if(right){
+		rightShift = moveRight(x,horizontalIndex,verticalIndex);
+		assignChild(x, rightShift, x->child2);
+	}
+	if(up){
+		upShift = moveUp(x,horizontalIndex,verticalIndex);
+		assignChild(x, upShift, x->child3);
+	}
+	if(down){
+		downShift = moveDown(x,horizontalIndex,verticalIndex);
+		assignChild(x, downShift, x->child4);
+	}
+	//Left = 1
+	//Right = 2
+	//Up = 3
+	//Down = 4
+
+	uniformCostSearch(q.top());
+
+}
+void puzzle::misplacedTileSearch(path* x){
 	if(isGoalState(x->puzzle)){
 		cout << "LITTY BOIZ" << endl;
 	}
@@ -210,25 +289,81 @@ void puzzle::uniformCostSearch(path* x){
 		cout << "Fuck" << endl;
 	}
 }
-void puzzle::misplacedTileSearch(path* x){}
-void puzzle::manhattanDistanceSearch(path* x){}
+void puzzle::manhattanDistanceSearch(path* x){
+	if(isGoalState(x->puzzle)){
+		cout << "LITTY BOIZ" << endl;
+	}
+	else{
+		cout << "Fuck" << endl;
+	}
+}
 
-void puzzle::moveLeft(path* x,int i,int j){
+vector< vector<char> > puzzle::moveLeft(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j-1));
 
+	displayPuzzle(x);
+	return tempPuzzle;
 }
-void puzzle::moveRight(path* x,int i,int j){
+vector< vector<char> > puzzle::moveRight(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j+1));
+	displayPuzzle(x);
+	return tempPuzzle;
 }
-void puzzle::moveUp(path* x,int i,int j){
+vector< vector<char> > puzzle::moveUp(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i-1).at(j));
-
+	displayPuzzle(x);
+	return tempPuzzle;
 }
-void puzzle::moveDown(path* x,int i,int j){
+vector< vector<char> > puzzle::moveDown(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i+1).at(j));
+	displayPuzzle(x);
+	return tempPuzzle;
+}
 
+void puzzle::assignChild(path* x, vector< vector<char> > puzzle, path* child){
+	path* temp = childCreator(x, puzzle);
+	if(isUnique(temp->puzzle)){
+		child = temp;
+		child->head = x;
+		q.push(child);
+		totalNodes++;
+		nodesInQueue++;
+
+		displayPuzzle(temp);
+	}
+}
+//Only if brand new state
+path* puzzle::childCreator(path* x, vector< vector<char> > puzzle){
+	path* temp = new path;
+	prevStates.push_back(puzzle);
+
+	temp->branchCost = x->branchCost + 1;
+	temp->puzzle = puzzle;
+
+	return temp;
+}
+
+bool puzzle::isUnique(vector< vector<char> > puzzle){
+	for(int i = 0; i < prevStates.size(); i++){
+		if(puzzle == prevStates.at(i)){
+			return false;
+		}
+	}
+	return true;
+}
+void puzzle::displayPuzzle(path* x){
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			cout << x->puzzle.at(i).at(j) << " ";
+		}
+		cout << endl;
+
+	}
+	cout << endl;
 }
