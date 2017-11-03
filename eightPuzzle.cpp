@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <stdexcept>
+//#include <stddef.h>
 #include "eightPuzzle.h"
 
 using namespace std;
@@ -120,7 +121,7 @@ bool puzzle::isValid(path* x){
 // makes sure the user inputs 1, 2, or 3 to select algorithm
 // also returns if root is NULL or the user input puzzle is not valid
 void puzzle::algorithmSelector(int x){
-	if(rootNode == null)
+	if(rootNode == NULL)
 		 throw std::invalid_argument( "Failed to initalize puzzle" );
 	cout << "Expanding state" << endl;
 	if(x == 1){
@@ -170,5 +171,29 @@ int puzzle::childrenCalculator(path *x){
 			}
 		}
 	}
+	return nOfChildren;
+}
+
+void puzzle::uniformCostSearch(path* x){}
+void puzzle::misplacedTileSearch(path* x){}
+void puzzle::manhattanDistanceSearch(path* x){}
+
+void puzzle::moveLeft(path* x,int i,int j){
+	vector< vector<char> > tempPuzzle = x->puzzle;
+	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j-1));
+
+}
+void puzzle::moveRight(path* x,int i,int j){
+	vector< vector<char> > tempPuzzle = x->puzzle;
+	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j+1));
+}
+void puzzle::moveUp(path* x,int i,int j){
+	vector< vector<char> > tempPuzzle = x->puzzle;
+	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i-1).at(j));
+
+}
+void puzzle::moveDown(path* x,int i,int j){
+	vector< vector<char> > tempPuzzle = x->puzzle;
+	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i+1).at(j));
 
 }

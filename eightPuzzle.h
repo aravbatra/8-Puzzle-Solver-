@@ -49,7 +49,7 @@ private:
   list<path*> solutionPath;
 
   int charToInt(char c);
-  vector<string> moves; 
+  vector<string> moves;
   int childrenCalculator(path* x);
 
 
@@ -62,10 +62,14 @@ public:
       bool isValid(path* x);
 
 
-
       void uniformCostSearch(path* x);
       void misplacedTileSearch(path* x);
       void manhattanDistanceSearch(path* x);
+
+      void moveLeft(path* x,int i,int j);
+      void moveRight(path* x,int i,int j);
+      void moveUp(path* x,int i,int j);
+      void moveDown(path* x,int i,int j);
 
       };
 #endif
