@@ -50,6 +50,8 @@ private:
   //goalnode
   path* goalNode;
 
+  bool goalState;
+
   //Keeps track of total nodes expanded
   int totalNodes;
 
@@ -78,7 +80,10 @@ public:
       puzzle();
       void generatePuzzle(int x);
       void algorithmSelector(int x);
+
       void displayPuzzle(path* x);
+      void displaySolution(path* x);
+
       bool isValid(path* x);
       bool isGoalState(vector< vector<char> > puzzle);
       bool isUnique(vector< vector<char> > puzzle);

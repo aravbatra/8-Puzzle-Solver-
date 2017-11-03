@@ -22,7 +22,11 @@ void puzzle::generatePuzzle(int x){
 	p->child2 = NULL;
 	p->child3 = NULL;
 	p->child4 = NULL;
+	p->head = NULL;
+	p->heuristic = 0;
+	p->branchCost = 0;
 
+	goalState = false;
 	totalNodes = 0;
 	nodesInQueue = 0;
 
@@ -222,8 +226,8 @@ void puzzle::uniformCostSearch(path* x){
 	vector< vector<char> > upShift;
 
 	if(isGoalState(x->puzzle)){
-		cout << "LITTY BOIZ" << endl;
-		return;
+		goalState = true;
+		goalNode = x;
 	}
 	else{
 		q.pop();
@@ -273,6 +277,27 @@ void puzzle::uniformCostSearch(path* x){
 		downShift = moveDown(x,horizontalIndex,verticalIndex);
 		assignChild(x, downShift, x->child4);
 	}
+
+	if(goalState){
+		while(q.top() != goalNode)
+		{
+			q.pop();
+		}
+		displayPuzzle(q.top());
+		cout << "Goal!" << endl;
+
+		cout << "To solve this problem the search algorithm expanded a total of ";
+		cout << totalNodes << " nodes." << endl;
+
+		cout << "The maximum nodes in the queue at any one time was ";
+		cout << nodesInQueue << "." << endl;
+
+		cout << "The depth of the goal node was ";
+		cout << q.top()->branchCost << "." << endl;
+
+		return;
+	}
+
 	//Left = 1
 	//Right = 2
 	//Up = 3
@@ -282,12 +307,7 @@ void puzzle::uniformCostSearch(path* x){
 
 }
 void puzzle::misplacedTileSearch(path* x){
-	if(isGoalState(x->puzzle)){
-		cout << "LITTY BOIZ" << endl;
-	}
-	else{
-		cout << "Fuck" << endl;
-	}
+	
 }
 void puzzle::manhattanDistanceSearch(path* x){
 	if(isGoalState(x->puzzle)){
@@ -302,34 +322,56 @@ vector< vector<char> > puzzle::moveLeft(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j-1));
 
-	displayPuzzle(x);
+	//displayPuzzle(x);
 	return tempPuzzle;
 }
 vector< vector<char> > puzzle::moveRight(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i).at(j+1));
-	displayPuzzle(x);
+	//displayPuzzle(x);
 	return tempPuzzle;
 }
 vector< vector<char> > puzzle::moveUp(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i-1).at(j));
-	displayPuzzle(x);
+	//displayPuzzle(x);
 	return tempPuzzle;
 }
 vector< vector<char> > puzzle::moveDown(path* x,int i,int j){
 	vector< vector<char> > tempPuzzle = x->puzzle;
 	swap(tempPuzzle.at(i).at(j), tempPuzzle.at(i+1).at(j));
-	displayPuzzle(x);
+	//displayPuzzle(x);
 	return tempPuzzle;
 }
 
 void puzzle::assignChild(path* x, vector< vector<char> > puzzle, path* child){
 	path* temp = childCreator(x, puzzle);
-	if(isUnique(temp->puzzle)){
+
+	if(goalState){
+		return;
+	}
+	if(isGoalState(puzzle)){
+		goalState = true;
+		prevStates.push_back(puzzle);
+
 		child = temp;
 		child->head = x;
 		q.push(child);
+		totalNodes++;
+		nodesInQueue++;
+
+		goalNode = child;
+
+		return;
+	}
+
+	if(isUnique(temp->puzzle)){
+		prevStates.push_back(temp->puzzle);
+		cout << "ENTERED assign" << endl;
+		child = temp;
+		child->head = x;
+		q.push(child);
+
 		totalNodes++;
 		nodesInQueue++;
 
@@ -339,7 +381,7 @@ void puzzle::assignChild(path* x, vector< vector<char> > puzzle, path* child){
 //Only if brand new state
 path* puzzle::childCreator(path* x, vector< vector<char> > puzzle){
 	path* temp = new path;
-	prevStates.push_back(puzzle);
+
 
 	temp->branchCost = x->branchCost + 1;
 	temp->puzzle = puzzle;
@@ -355,7 +397,33 @@ bool puzzle::isUnique(vector< vector<char> > puzzle){
 	}
 	return true;
 }
+
+// void puzzle::displaySolution(path* x){
+// 	if(x == root){
+// 		solutionPath.push_front(x)
+// 		for (int i = 0; i < solutionPath.size(); i++) {
+// 			cou
+// 		}
+// 	}
+// 	else{
+// 		solutionPath.push_front(x)
+// 		displaySolution(x->head);
+// 	}
+//
+// }
+
+
+
 void puzzle::displayPuzzle(path* x){
+	if(x != rootNode)
+		{
+			cout << "The best state to expand with a g(n) = ";
+			cout << x->branchCost;
+			cout << " and h(n) = ";
+			cout << x->heuristic;
+			cout << " is..." << endl;
+		}
+
 	for(int i = 0; i < 3; i++)
 	{
 		for(int j = 0; j < 3; j++)
