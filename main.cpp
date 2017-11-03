@@ -16,7 +16,7 @@ int main()
     cout << "Type \"1\" to use a default puzzle, or \"2\" to enter your own puzzle" << endl;
     cin >> puzzleChoice;
 	p.generatePuzzle(puzzleChoice);
-
+	
 	int algorithmChoice = 0;
 	cout << "Enter your choice of algorithm" << endl;
 	cout << "\t1) Uniform Cost Search" << endl;

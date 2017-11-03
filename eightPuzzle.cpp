@@ -11,7 +11,7 @@ using namespace std;
 // constructor
 puzzle::puzzle()
 {
-	//root = NULL;
+	rootNode = NULL;
 }
 
 // Uses default puzzle or takes user input
@@ -32,25 +32,28 @@ void puzzle::generatePuzzle(int x){
 		// 4 8 0
 		// 7 6 5
 		cout << "Default puzzle is " << endl;
-		vector<char> vec1;
-		vec1.push_back('1');
-		vec1.push_back('2');
-		vec1.push_back('3');
-		vector<char> vec2;
-		vec2.push_back('4');
-		vec2.push_back('8');
-		vec2.push_back('0');
-		vector<char> vec3;
-		vec3.push_back('7');
-		vec3.push_back('6');
-		vec3.push_back('5');
+		vector<char> row1, row2, row3;
+		row1.push_back('1');
+		row1.push_back('2');
+		row1.push_back('3');
 
-		p->puzzle.push_back(vec1);
-		p->puzzle.push_back(vec2);
-		p->puzzle.push_back(vec3);
+		row2.push_back('4');
+		row2.push_back('8');
+		row2.push_back('0');
+
+		row3.push_back('7');
+		row3.push_back('6');
+		row3.push_back('9');
+
+		p->puzzle.push_back(row1);
+		p->puzzle.push_back(row2);
+		p->puzzle.push_back(row3);
 
 		rootNode = p;
 		prevStates.push_back(rootNode->puzzle);
+		if(!isValid(rootNode)){
+			 throw std::invalid_argument( "Invalid Puzzle" );
+		}
 		//TODO: add displayPuzzle
 		//displayPuzzle(rootNode);
 
@@ -82,13 +85,36 @@ void puzzle::generatePuzzle(int x){
 		cout << "Your puzzle is " << endl;
 		//TODO: add displayPuzzle
 		//displayPuzzle(rootNode);
+
+		p->puzzle.push_back(row1);
+		p->puzzle.push_back(row2);
+		p->puzzle.push_back(row3);
+
 		rootNode = p;
+		if(!isValid(rootNode)){
+			 throw std::invalid_argument( "Invalid Puzzle" );
+		}
 		prevStates.push_back(rootNode->puzzle);
 
 	}
 	else{
 		 throw std::invalid_argument( "received invalid value" );
 	}
+
+}
+
+int puzzle::charToInt(char c){
+	int i = c - '0';
+	return i;
+}
+bool puzzle::isValid(path* x){
+	for(int i =0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(charToInt(x->puzzle.at(i).at(j)) <= 8 && charToInt(x->puzzle.at(i).at(j)) >= 0){}
+			else{return false;}
+		}
+	}
+	return true;
 
 }
 // makes sure the user inputs 1, 2, or 3 to select algorithm

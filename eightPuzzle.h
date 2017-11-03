@@ -42,7 +42,6 @@ private:
   //Sets true if we get to solved state
   bool goalState;
 
-
   //vector of puzzles to store states to check repeats
   vector< vector< vector<char> > >prevStates;
 
@@ -53,5 +52,12 @@ public:
       void generatePuzzle(int x);
       void algorithmSelect(int x);
       void displayPuzzle();
+      bool isValid(path* x);
+      int charToInt(char c);
+
+      void uniformCostSearch(path* x);
+      void misplacedTileSearch(path* x);
+      void manhattanDistanceSearch(path* x);
+
       };
 #endif
